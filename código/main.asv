@@ -1,4 +1,4 @@
-% LSB | 1 Bit | GS y binario | Ajustado a Base
+% LSB | 1 Bit | GS y binario 
 
 % Lectura imagenes
 objetivo = imread("banco.jpg");

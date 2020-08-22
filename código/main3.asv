@@ -1,0 +1,40 @@
+% LSB | 1 Bit | RGB y 3 bits (1 x canal) | Ajustado a Base
+
+% Lectura imagenes
+objetivo = imread("banco.jpg");
+[X,Y,~] = size(objetivo);
+% Conversion marca a objeto binario
+marca = imread("logo.jpg");
+marca = imresize(marca,[X,Y]);
+[downbited,map] = rgb2ind(marca, 8);
+
+% Obtenemos tamaño de imagen objetivo y de marca
+[X,Y,~] = size(objetivo);
+[F,C,~] = size(marca);
+
+R = bitget(downbited, 1);
+G = bitget(downbited, 2);
+B = bitget(downbited, 3);
+
+objetivo(:,:,1)=(objetivo(:,:,1)-mod(objetivo(:,:,1),2))+R;
+objetivo(:,:,2)=(objetivo(:,:,2)-mod(objetivo(:,:,2),2))+G;
+objetivo(:,:,3)=(objetivo(:,:,3)-mod(objetivo(:,:,3),2))+B;
+
+imtool(objetivo);
+stop;
+
+
+% LSB de objetivo a 0
+objetivo(:,:,1)=objetivo(:,:,1)-mod(objetivo(:,:,1),2);
+% Escalamos marca al mismo tamaño que objetivo
+logo = imresize(marca,[X,Y]);
+% Convertimos objeto binario al mismo tipo que objetivo
+logo = cast(logo, 'uint8');
+% Insertamos marca en un canal de objetivo
+final = objetivo;
+final(:,:,1) = final(:,:,1) + logo;
+
+% Recuperamos marca
+test1=~mod(final(:,:,1),2);
+% La mostramos
+imtool(test1);
