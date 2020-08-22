@@ -1,21 +1,15 @@
 % Lectura imagenes
 objetivo = imread("banco.jpg");
 objetivo = rgb2gray(objetivo);
-marca = imbinarize(imread("logo.png"));
+marca = imbinarize(rgb2gray(imread("logo.jpg")));
 
 % Obtenemos tamaño de imagen objetivo y de marca
 [X,Y,~] = size(objetivo);
 [F,C,~] = size(marca);
 
-% Comprobamos que es mayor, si la imagen objetivo o la marca
-if (X>F) && (Y>C)
-    offsetX = (X-F)/2;
-    offsetY = (Y-C)/2;
-    i = 1;
-    for w = offsetX:(offsetX+F)
-        for p = offsetY:(offsetY+C)
-            bitset(objetivo(w,p), 0, marca(i))
-            i = i+1;
-        end
-    end
-end
+% Todos los bits de la imagen original a 0
+objetivo(:)=objetivo(:)-mod(objetivo(:),2);
+logo = imresize(marca,[X,Y]);
+logo = cast(logo, 'uint8');
+final = objetivo + logo;
+test1=mod(final,2);
