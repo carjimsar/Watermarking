@@ -23,17 +23,13 @@ objetivo(:,:,2)=(objetivo(:,:,2)-mod(objetivo(:,:,2),2))+G;
 objetivo(:,:,3)=(objetivo(:,:,3)-mod(objetivo(:,:,3),2))+B;
 
 % Recuperamos la marca
-recupera=zeros(3000,4500);
-for c = 1 : 3000
-    for j = 1: 4500
-        if bitget(objetivo(c,j,1), 1)
-            recupera(c,j) = bitset(recupera(c,j), 1);
-        end
-        if bitget(objetivo(c,j,2), 1)
-            recupera(c,j) = bitset(recupera(c,j), 2);
-        end
-        if bitget(objetivo(c,j,3), 1)
-            recupera(c,j) = bitset(recupera(c,j), 3);
-        end
-    end
-end
+recupera=zeros(3000,4500, 'uint8');
+
+mask = uint8(1);
+
+recupera = recupera + bitand(mask, objetivo(:,:,1));
+recupera = recupera + bitshift(bitand(mask, objetivo(:,:,2)),1);
+recupera = recupera + bitshift(bitand(mask, objetivo(:,:,3)),2);
+
+imwrite(recupera,map,'test.tif');
+imshow(imread("test.tif"));
