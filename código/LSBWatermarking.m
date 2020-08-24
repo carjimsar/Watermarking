@@ -20,8 +20,13 @@ if colouredBase == 0
    deleteMask = bitcmp(uint8((2^(markDepth))-1));
    watermarked = toMark + bitand(base, deleteMask);
 else
-   for i = 1 : markDepth %HAY QUE ARREGLAR LO DE MOD, DEBE SER LISTA CICLICA DE 1 2 3 
-        watermarked(:,:,mod(i,3)) = bitand(watermarked(:,:,mod(i,3)), deleteMask);
-        % AQUI SE SUMA LA INFO CORRESPONDIENTE Y A JUIR
+   apanio = [1,2,3,1,2,3,1,2]; % Apaño para trabajar facilmente con cada canal
+   deleteMask = uint(254);
+   for i = 1 : markDepth
+       if(i == 4) || (i == 7)
+        deleteMask = bitshift(deleteMask,1);
+       end
+       watermarked(:,:,apanio(i)) = bitand(watermarked(:,:,apanio(i)), deleteMask) % AQUI SE SUMA LA INFO CORRESPONDIENTE Y A JUIR;
+
    end
 end
