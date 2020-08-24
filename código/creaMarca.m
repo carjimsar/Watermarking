@@ -11,13 +11,13 @@ else
 end
 
 switch type
-    case 1 %Redimensionado
+    case 1 % Redimensionado
         marcaFinal = imresize(marca,[baseHeight,baseWidth]);
-    case 2 %Centrado
+    case 2 % Centrado
         marcaFinal = zeros(baseHeight,baseWidth, 'uint8');
         % Centramos la marca en una imagen en blanco del tamaño apropiado
         marcaFinal( (baseHeight-markHeight)/2 : ((baseHeight-markHeight)/2 + markHeight) - 1, (baseWidth-markWidth)/2 : ((baseWidth-markWidth)/2 + markWidth) - 1) = marca;
-    case 3 %Bloque
+    case 3 % Patron
         % Calculamos cuantas veces es la imagen base la marca
         times2repeat = round(max([baseHeight/markHeight, baseWidth/baseHeight]),0);
         % Replicamos la marca por exceso
