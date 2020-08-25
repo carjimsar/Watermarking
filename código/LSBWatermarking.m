@@ -34,7 +34,7 @@ else
         deleteMask = bitshift(deleteMask,1)+1; % Sumamos 1 para no eliminar la info ya introducida
         offset = offset + 1;
        end
-       watermarked(:,:,apanio(i)) = bitshift(bitget(mark, i),offset) + bitand(watermarked(:,:,apanio(i)), deleteMask); 
+       watermarked(:,:,apanio(i)) = bitshift(bitget(toMark, i),offset) + bitand(watermarked(:,:,apanio(i)), deleteMask); 
    end
 end
 
