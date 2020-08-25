@@ -4,10 +4,12 @@ function [marcaFinal] = creaMarca(baseHeight,baseWidth,markHeight,markWidth,colo
 
 if colorDepth < 2
     % Si solo podemos usar un bit, la marca a introducir es binaria
-    marca = imbinarize(rgb2gray(marca));
+    marca = imbinarize(marca);
 elseif colorDepth < 8
     % De otra forma, 
     [marca,~] = rgb2ind(marca, colorDepth);
+else
+    marca = rgb2gray(marca);
 end
 
 switch type
