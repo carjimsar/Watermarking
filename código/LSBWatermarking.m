@@ -50,8 +50,8 @@ if colouredBase == 1
     recoverMask = uint8(1); % Máscara para realizar las ops por bit para recuperarlos
     for i = 1 : markDepth % Bucle para recuperar bit a bit de la marca
         if ((i == 4) || (i == 7)) % Hay que cambiar la mascara cuando necesitemos mas bits de un canal
-            recoverMask = bitshift(recoverMask,1); % Sumamos 1 para no eliminar la info ya introducida
-            offset=offset-1;
+            recoverMask = bitshift(recoverMask,1);
+            offset=offset-1; % Lo usamos para desplazar los bits recuperados y ser insertados en la posicion correcta
         end
         recovered = recovered + bitshift(bitand(watermarked(:,:,apanio(i)),recoverMask),offset);
         offset = offset+1;
