@@ -38,6 +38,8 @@ else
    end
 end
 
+% RUIDOS Y MODIFICACIONES
+
 % RECUPERAR
 
 recovered = zeros(baseHeight, baseWidth, 'uint8'); % Reserva de espacio para la marca recuperada

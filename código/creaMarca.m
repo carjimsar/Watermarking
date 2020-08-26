@@ -1,14 +1,16 @@
-function [marcaFinal] = creaMarca(baseHeight,baseWidth,markHeight,markWidth,colorDepth,marca,type)
+function [marcaFinal] = creaMarca(baseHeight,baseWidth,markHeight,markWidth,bitDepth,marca,type)
 % Función que crea la marca a incrustar a partir de las opciones
 % indicadas por el usuario y la marca original facilitada.
 
-if colorDepth < 2
+if bitDepth < 2
     % Si solo podemos usar un bit, la marca a introducir es binaria
     marca = imbinarize(marca);
-elseif colorDepth < 8
-    % De otra forma, 
-    [marca,~] = rgb2ind(marca, colorDepth);
+elseif bitDepth < 8
+    % De otra forma
+    %[marca,~] = rgb2ind(marca, colorDepth);
+    marca = bitshift(marca, 8-bitDepth);
 else
+    % Si podemos usar los 8, insertamos como marca en escala de grises
     marca = rgb2gray(marca);
 end
 
