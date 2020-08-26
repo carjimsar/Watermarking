@@ -1,3 +1,4 @@
+clear;
 % LSB
 % Con este script se puede tanto introducir una marca de agua (no visible)
 % en una imagen como recuperarla.
@@ -7,10 +8,9 @@ mark = imread("logo.jpg");
 % PARAMETROS A CONFIGURAR
 % Aunque aqui se facilita una breve descripcion, en el manual se encuentra
 % detallada la configuración a realizar por el usuario.
-insertionType = 3; % 1 para redimensionado, 2 para centrado y 3 para bloque
-markDepth = 7; % Bits a usar para la marca de agua. Por defecto, un objeto binario
-colouredBase = 0; % Para resultado en GS 0, en color 1
-
+insertionType = 1; % 1 para redimensionado, 2 para centrado y 3 para bloque
+markDepth = 8; % Bits a usar para la marca de agua. Por defecto, un objeto binario
+colouredBase = 1; % Para resultado en GS 0, en color 1
 
 % NO TOCAR
 
@@ -19,6 +19,7 @@ colouredBase = 0; % Para resultado en GS 0, en color 1
 [markHeight,markWidth,~] = size(mark);
 toMark = creaMarca(baseHeight,baseWidth,markHeight,markWidth,markDepth,mark,insertionType);
 toMark = cast(toMark, 'uint8');
+test = zeros(baseHeight,baseWidth,'uint8');
 
 if colouredBase == 0
    baseGS = rgb2gray(base);
@@ -34,7 +35,7 @@ else
         deleteMask = bitshift(deleteMask,1)+1; % Sumamos 1 para no eliminar la info ya introducida
         offset = offset + 1;
        end
-       watermarked(:,:,apanio(i)) = bitshift(bitget(toMark, i),offset) + bitand(watermarked(:,:,apanio(i)), deleteMask); 
+       watermarked(:,:,apanio(i)) = bitshift(bitget(toMark, i),offset) + bitand(watermarked(:,:,apanio(i)), deleteMask);
    end
 end
 
@@ -44,13 +45,16 @@ end
 
 recovered = zeros(baseHeight, baseWidth, 'uint8'); % Reserva de espacio para la marca recuperada
 
+offset = 0;
 if colouredBase == 1
     recoverMask = uint8(1); % Máscara para realizar las ops por bit para recuperarlos
     for i = 1 : markDepth % Bucle para recuperar bit a bit de la marca
         if ((i == 4) || (i == 7)) % Hay que cambiar la mascara cuando necesitemos mas bits de un canal
-            recoverMask = bitshift(recoverMask,1)+1; % Sumamos 1 para no eliminar la info ya introducida
+            recoverMask = bitshift(recoverMask,1); % Sumamos 1 para no eliminar la info ya introducida
+            offset=offset-1;
         end
-        recovered = recovered + bitshift(bitand(watermarked(:,:,apanio(i)),recoverMask),i);
+        recovered = recovered + bitshift(bitand(watermarked(:,:,apanio(i)),recoverMask),offset);
+        offset = offset+1;
     end
 else
     recoverMask = uint8((2^(markDepth))-1);
@@ -74,11 +78,11 @@ end
 title('Base Objetivo');
 subplot(2,3,4);
 %toMark = cast(toMark, 'logical');
-imshow(~toMark);
+imshow(toMark);
 title('Marca Objetivo');
 subplot(2,3,5);
 imshow(watermarked);
 title('Resultado');
 subplot(2,3,6);
-imshow(~recovered);
+imshow(recovered);
 title('Marca Recuperada');
