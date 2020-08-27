@@ -9,7 +9,7 @@ mark = imread("logo.jpg");
 % Aunque aqui se facilita una breve descripcion, en el manual se encuentra
 % detallada la configuración a realizar por el usuario.
 insertionType = 1; % 1 para redimensionado, 2 para centrado y 3 para bloque
-markDepth = 8; % Bits a usar para la marca de agua. Por defecto, un objeto binario
+markDepth = 1; % Bits a usar para la marca de agua. Por defecto, un objeto binario
 colouredBase = 1; % Para resultado en GS 0, en color 1
 
 % NO TOCAR
@@ -17,7 +17,7 @@ colouredBase = 1; % Para resultado en GS 0, en color 1
 % INSERTAR
 [baseHeight,baseWidth,~] = size(base);
 [markHeight,markWidth,~] = size(mark);
-toMark = creaMarca(baseHeight,baseWidth,markHeight,markWidth,markDepth,mark,insertionType);
+toMark = creaMarca(baseHeight,baseWidth,markHeight,markWidth,markDepth,mark,insertionType, colouredBase);
 toMark = cast(toMark, 'uint8');
 test = zeros(baseHeight,baseWidth,'uint8');
 
@@ -40,6 +40,9 @@ else
 end
 
 % RUIDOS Y MODIFICACIONES
+%watermarked =  imnoise(watermarked, 'salt & pepper',0.2);
+
+
 
 % RECUPERAR
 
@@ -56,10 +59,13 @@ if colouredBase == 1
         recovered = recovered + bitshift(bitand(watermarked(:,:,apanio(i)),recoverMask),offset);
         offset = offset+1;
     end
+    recovered = bitshift(recovered,8-markDepth);
 else
     recoverMask = uint8((2^(markDepth))-1);
-    recovered = recovered + bitand(watermarked,recoverMask);
+    recovered = bitand(watermarked,recoverMask); 
+    recovered = bitshift(recovered,8-markDepth);
 end
+
 
 % Presentacion por pantalla
 figure();
@@ -78,11 +84,12 @@ end
 title('Base Objetivo');
 subplot(2,3,4);
 %toMark = cast(toMark, 'logical');
-imshow(toMark);
+imshow(bitshift(toMark,8-markDepth));
 title('Marca Objetivo');
 subplot(2,3,5);
 imshow(watermarked);
 title('Resultado');
 subplot(2,3,6);
+%recovered = cast(recovered, 'logical');
 imshow(recovered);
 title('Marca Recuperada');
