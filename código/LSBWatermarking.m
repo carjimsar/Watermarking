@@ -11,6 +11,8 @@ mark = imread("logo.jpg");
 insertionType = 1; % 1 para redimensionado, 2 para centrado y 3 para bloque
 markDepth = 1; % Bits a usar para la marca de agua. Por defecto, un objeto binario
 colouredBase = 1; % Para resultado en GS 0, en color 1
+noiseType = 4; % 0 para no introducir ruido, 1 ruidos gausiano, 2 poisson, 3 sal y pimienta, 4 speckle
+noiseIntensity = 0.01;
 
 % NO TOCAR
 
@@ -41,7 +43,16 @@ end
 
 % RUIDOS Y MODIFICACIONES
 %watermarked =  imnoise(watermarked, 'salt & pepper',0.2);
-
+switch noiseType
+    case 1 % Redimensionado
+        watermarked =  imnoise(watermarked, 'gaussian',noiseIntensity);
+    case 2 % Centrado
+        watermarked =  imnoise(watermarked, 'poisson');
+    case 3 % Patron
+        watermarked =  imnoise(watermarked, 'salt & pepper',noiseIntensity);
+    case 4 % Patron
+        watermarked =  imnoise(watermarked, 'speckle',noiseIntensity);
+end
 
 
 % RECUPERAR
