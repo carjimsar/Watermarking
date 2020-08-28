@@ -1,20 +1,32 @@
+% Carlos Jimenez Espadafor Sardon
+% Procesamiento Imagenes Digitales
+% Convocatoria Septiembre 2020
 clear;
-% LSB
-% Con este script se puede tanto introducir una marca de agua (no visible)
-% en una imagen como recuperarla.
-base = imread("banco.jpg");
-mark = imread("logo.jpg");
-
 % PARAMETROS A CONFIGURAR
 % Aunque aqui se facilita una breve descripcion, en el manual se encuentra
 % detallada la configuración a realizar por el usuario.
+saveImages = 0; % Exportar imagenes a archivos
 insertionType = 1; % 1 para redimensionado, 2 para centrado y 3 para bloque
 markDepth = 1; % Bits a usar para la marca de agua. Por defecto, un objeto binario
 colouredBase = 1; % Para resultado en GS 0, en color 1
 noiseType = 4; % 0 para no introducir ruido, 1 ruidos gausiano, 2 poisson, 3 sal y pimienta, 4 speckle
 noiseIntensity = 0.01;
 
+
+
 % NO TOCAR
+waitfor(msgbox('Seleccione la base','Bienvenido'));
+[archivo,ruta] = uigetfile(...    
+    {'*.jpg; *.JPG; *.jpeg; *.JPEG; *.img; *.IMG; *.tif; *.TIF; *.tiff; *.TIFF; *.png; *.PNG','Supported Files'},...    
+    'MultiSelect', 'on');
+base = imread(strcat(ruta,archivo));
+
+waitfor(msgbox('Seleccione la marca a insertar','Bienvenido'));
+[archivo,ruta] = uigetfile(...    
+    {'*.jpg; *.JPG; *.jpeg; *.JPEG; *.img; *.IMG; *.tif; *.TIF; *.tiff; *.TIFF; *.png; *.PNG','Supported Files'},...    
+    'MultiSelect', 'on');
+
+mark = imread(strcat(ruta,archivo));
 
 % INSERTAR
 [baseHeight,baseWidth,~] = size(base);
@@ -77,7 +89,14 @@ else
     recovered = bitshift(recovered,8-markDepth);
 end
 
-
+if saveImages == 1
+    if (colouredBase == 0)
+        imwrite(baseGS,'baseGS.png');
+    end
+    imwrite(toMark,'toMark.png');
+    imwrite(watermarked,'final.png');
+    imwrite(recovered,'recovered.png');
+end
 % Presentacion por pantalla
 figure();
 subplot(2,3,1);
