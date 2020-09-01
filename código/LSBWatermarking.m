@@ -5,15 +5,13 @@ clear;
 % PARAMETROS A CONFIGURAR
 % Aunque aqui se facilita una breve descripcion, en el manual se encuentra
 % detallada la configuración a realizar por el usuario.
-saveImages = 0; % Exportar imagenes a archivos
+saveImages = 1; % Exportar imagenes a archivos
 insertionType = 1; % 1 para redimensionado, 2 para centrado y 3 para bloque
-markDepth = 0; % Bits a usar para la marca de agua. Por defecto, un objeto binario
+markDepth = 7; % Bits a usar para la marca de agua. Por defecto, un objeto binario
 colouredBase = 0; % Para resultado en GS 0, en color 1
 noiseType = 0; % 0 para no introducir ruido, 1 ruidos gausiano, 2 poisson, 3 sal y pimienta, 4 speckle
 noiseIntensity = 0.01;
 showHists = 0; % 1 para mostrar los histogramas de todas las imagenes
-
-
 
 % NO TOCAR
 % waitfor(msgbox('Seleccione la base','Bienvenido'));
@@ -92,21 +90,25 @@ else
     recovered = bitshift(recovered,8-markDepth);
 end
 
-if saveImages == 1
-    if (colouredBase == 0)
-        imwrite(baseGS,'baseGS.png');
-    end
-    imwrite(bitshift(toMark,8-markDepth),'toMark.png');
-    imwrite(watermarked,'final.png');
-    imwrite(recovered,'recovered.png');
-end
-
-% Presentacion por pantalla
 if(markDepth == 1)
     toMark = cast(toMark, 'logical');
     recovered = cast(recovered, 'logical');
 end
 
+if saveImages == 1
+    if (colouredBase == 0)
+        imwrite(baseGS,'baseGS.png');
+    end
+    if markDepth > 1
+        imwrite(bitshift(toMark,8-markDepth),'toMark.png');
+    else
+        imwrite(toMark,'toMark.png');
+    end
+    imwrite(watermarked,'final.png');
+    imwrite(recovered,'recovered.png');
+end
+
+% Presentacion por pantalla
 figure();
 
 subplot(2,2,1);
