@@ -7,10 +7,10 @@ clear;
 % detallada la configuración a realizar por el usuario.
 saveImages = 1; % Exportar imagenes a archivos
 insertionType = 1; % 1 para redimensionado, 2 para centrado y 3 para bloque
-markDepth = 7; % Bits a usar para la marca de agua. Por defecto, un objeto binario
-colouredBase = 0; % Para resultado en GS 0, en color 1
-noiseType = 0; % 0 para no introducir ruido, 1 ruidos gausiano, 2 poisson, 3 sal y pimienta, 4 speckle
-noiseIntensity = 0.01;
+markDepth = 8; % Bits a usar para la marca de agua. Por defecto, un objeto binario
+colouredBase = 1; % Para resultado en GS 0, en color 1
+noiseType = 1; % 0 para no introducir ruido, 1 ruidos gausiano, 2 poisson, 3 sal y pimienta, 4 speckle
+noiseIntensity = 0.1;
 showHists = 0; % 1 para mostrar los histogramas de todas las imagenes
 
 % NO TOCAR
@@ -26,14 +26,14 @@ showHists = 0; % 1 para mostrar los histogramas de todas las imagenes
 %     'MultiSelect', 'on');
 % 
 % mark = imread(strcat(ruta,archivo));
-base = imread('9780.jpg');
+base = imread('rgb.jpg');
 mark = imread('logo.jpg');
 
 
 % INSERTAR
 [baseHeight,baseWidth,~] = size(base);
 [markHeight,markWidth,~] = size(mark);
-toMark = creaMarca(baseHeight,baseWidth,markHeight,markWidth,markDepth,mark,insertionType, colouredBase);
+toMark = creaMarca(baseHeight,baseWidth,markHeight,markWidth,markDepth,mark,insertionType);
 toMark = cast(toMark, 'uint8');
 
 if colouredBase == 0
@@ -55,7 +55,6 @@ else
 end
 
 % RUIDOS Y MODIFICACIONES
-%watermarked =  imnoise(watermarked, 'salt & pepper',0.2);
 switch noiseType
     case 1 % Redimensionado
         watermarked =  imnoise(watermarked, 'gaussian',noiseIntensity);
@@ -67,8 +66,13 @@ switch noiseType
         watermarked =  imnoise(watermarked, 'speckle',noiseIntensity);
 end
 
+% PARA RECUPERAR OTRA IMAGEN
+
+% watermarked = imread('telegram.jpg');
+% [baseHeight,baseWidth,~] = size(watermarked);
 
 % RECUPERAR
+
 
 recovered = zeros(baseHeight, baseWidth, 'uint8'); % Reserva de espacio para la marca recuperada
 
