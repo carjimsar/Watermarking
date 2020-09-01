@@ -7,34 +7,31 @@ clear;
 % detallada la configuración a realizar por el usuario.
 saveImages = 1; % Exportar imagenes a archivos
 insertionType = 1; % 1 para redimensionado, 2 para centrado y 3 para bloque
-markDepth = 8; % Bits a usar para la marca de agua. Por defecto, un objeto binario
-colouredBase = 1; % Para resultado en GS 0, en color 1
-noiseType = 1; % 0 para no introducir ruido, 1 ruidos gausiano, 2 poisson, 3 sal y pimienta, 4 speckle
+markDepth = 1; % Bits a usar para la marca de agua. Por defecto, un objeto binario
+colouredBase = 0; % Para resultado en GS 0, en color 1
+noiseType = 0; % 0 para no introducir ruido, 1 ruidos gausiano, 2 poisson, 3 sal y pimienta, 4 speckle
 noiseIntensity = 0.1;
 showHists = 0; % 1 para mostrar los histogramas de todas las imagenes
 
 % NO TOCAR
-% waitfor(msgbox('Seleccione la base','Bienvenido'));
-% [archivo,ruta] = uigetfile(...    
-%     {'*.jpg; *.JPG; *.jpeg; *.JPEG; *.img; *.IMG; *.tif; *.TIF; *.tiff; *.TIFF; *.png; *.PNG','Supported Files'},...    
-%     'MultiSelect', 'on');
-% base = imread(strcat(ruta,archivo));
-% 
-% waitfor(msgbox('Seleccione la marca a insertar','Bienvenido'));
-% [archivo,ruta] = uigetfile(...    
-%     {'*.jpg; *.JPG; *.jpeg; *.JPEG; *.img; *.IMG; *.tif; *.TIF; *.tiff; *.TIFF; *.png; *.PNG','Supported Files'},...    
-%     'MultiSelect', 'on');
-% 
-% mark = imread(strcat(ruta,archivo));
-base = imread('rgb.jpg');
-mark = imread('logo.jpg');
+waitfor(msgbox('Seleccione la base','Bienvenido'));
+[archivo,ruta] = uigetfile(...    
+    {'*.jpg; *.JPG; *.jpeg; *.JPEG; *.img; *.IMG; *.tif; *.TIF; *.tiff; *.TIFF; *.png; *.PNG','Supported Files'},...    
+    'MultiSelect', 'on');
+base = imread(strcat(ruta,archivo));
 
+waitfor(msgbox('Seleccione la marca a insertar','Bienvenido'));
+[archivo,ruta] = uigetfile(...    
+    {'*.jpg; *.JPG; *.jpeg; *.JPEG; *.img; *.IMG; *.tif; *.TIF; *.tiff; *.TIFF; *.png; *.PNG','Supported Files'},...    
+    'MultiSelect', 'on');
+
+mark = imread(strcat(ruta,archivo));
 
 % INSERTAR
 [baseHeight,baseWidth,~] = size(base);
 [markHeight,markWidth,~] = size(mark);
 toMark = creaMarca(baseHeight,baseWidth,markHeight,markWidth,markDepth,mark,insertionType);
-toMark = cast(toMark, 'uint8');
+toMark = cast(~toMark, 'uint8');
 
 if colouredBase == 0
    baseGS = rgb2gray(base);
@@ -68,7 +65,7 @@ end
 
 % PARA RECUPERAR OTRA IMAGEN
 
-% watermarked = imread('telegram.jpg');
+% watermarked = imread('wa2.jpeg');
 % [baseHeight,baseWidth,~] = size(watermarked);
 
 % RECUPERAR
