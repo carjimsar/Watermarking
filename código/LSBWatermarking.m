@@ -5,13 +5,13 @@ clear;
 % PARAMETROS A CONFIGURAR
 % Aunque aqui se facilita una breve descripcion, en el manual se encuentra
 % detallada la configuración a realizar por el usuario.
-saveImages = 1; % Exportar imagenes a archivos
+saveImages = 0; % Exportar imagenes a archivos
 insertionType = 1; % 1 para redimensionado, 2 para centrado y 3 para bloque
-markDepth = 1; % Bits a usar para la marca de agua. Por defecto, un objeto binario
-colouredBase = 0; % Para resultado en GS 0, en color 1
+markDepth = 8; % Bits a usar para la marca de agua. Por defecto, un objeto binario
+colouredBase = 1; % Para resultado en GS 0, en color 1
 noiseType = 0; % 0 para no introducir ruido, 1 ruidos gausiano, 2 poisson, 3 sal y pimienta, 4 speckle
 noiseIntensity = 0.1;
-showHists = 0; % 1 para mostrar los histogramas de todas las imagenes
+showHists = 1; % 1 para mostrar los histogramas de todas las imagenes
 
 % NO TOCAR
 waitfor(msgbox('Seleccione la base','Bienvenido'));
@@ -31,7 +31,7 @@ mark = imread(strcat(ruta,archivo));
 [baseHeight,baseWidth,~] = size(base);
 [markHeight,markWidth,~] = size(mark);
 toMark = creaMarca(baseHeight,baseWidth,markHeight,markWidth,markDepth,mark,insertionType);
-toMark = cast(~toMark, 'uint8');
+%toMark = cast(~toMark, 'uint8');
 
 if colouredBase == 0
    baseGS = rgb2gray(base);
